@@ -191,6 +191,35 @@ The resize filter takes three parameters :
 - `$mode`, one of the constants `FFMpeg\Filters\Video\ResizeFilter::RESIZEMODE_*` constants
 - `$useStandards`, a boolean to force the use of the nearest aspect ratio standard.
 
+###### Watermark
+
+Watermark a video with a given image.
+
+```php
+$video
+    ->filters()
+    ->watermark($watermarkPath, array(
+        'position' => 'relative',
+        'bottom' => 50,
+        'right' => 50,
+    ));
+```
+
+The watermark filter takes two parameters:
+
+`$watermarkPath`, the path to your watermark file.
+`$coordinates`, an array defining how you want your watermark positioned. You can use relative positioning as demonstrated above or absolute as such:
+
+```php
+$video
+    ->filters()
+    ->watermark($watermarkPath, array(
+        'position' => 'absolute',
+        'x' => 1180,
+        'y' => 620,
+    ));
+```
+
 ###### Framerate
 
 Changes the frame rate of the video.
@@ -241,8 +270,11 @@ pass a `FFMpeg\Format\FormatInterface` for that.
 Please note that audio kilobitrate is set on the audio format.
 
 ```php
-$format = new Format\Audio\Flac();
-$format->on('progress', function ($$audio, $format, $percentage) {
+$ffmpeg = FFMpeg\FFMpeg::create();
+$audio = $ffmpeg->open('track.mp3');
+
+$format = new FFMpeg\Format\Audio\Flac();
+$format->on('progress', function ($audio, $format, $percentage) {
     echo "$percentage % transcoded";
 });
 

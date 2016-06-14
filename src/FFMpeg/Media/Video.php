@@ -124,7 +124,7 @@ class Video extends Audio
         $commands[] = '-ss';
         $commands[] = '00:00:00.00';
         $commands[] = '-t';
-        $commands[] = '00:00:10.00';
+        $commands[] = '00:00:15.00';
         $commands[] = '-acodec';
         $commands[] = 'libfdk_aac';
         $commands[] = '-ar';
@@ -154,7 +154,7 @@ class Video extends Audio
         $commands[] = '-r';
         $commands[] = 30;
         $commands[] = '-s';
-        $commands[] = '480x480';
+        $commands[] = '680x680';
         $commands[] = '-coder';
         $commands[] = 1;
         $commands[] = '-flags';
