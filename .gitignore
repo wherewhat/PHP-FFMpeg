@@ -3,4 +3,5 @@
 /docs/build
 composer.phar
 phpunit.xml
+.idea
 
