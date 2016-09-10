@@ -17,6 +17,21 @@ use Silex\ServiceProviderInterface;
 
 class FFMpegServiceProvider implements ServiceProviderInterface
 {
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
+
+    public function boot()
+    {
+        // Publish a config file
+        $this->publishes([
+          __DIR__.'/../config/config.php' => config_path('ffmpeg-config.php')
+        ], 'config');
+    }
+
     public function register(Application $app)
     {
         $app['ffmpeg.configuration'] = array();
@@ -56,9 +71,5 @@ class FFMpegServiceProvider implements ServiceProviderInterface
 
             return FFProbe::create($configuration, $app['ffmpeg.logger'], $app['ffprobe.cache']);
         });
-    }
-
-    public function boot(Application $app)
-    {
     }
 }
