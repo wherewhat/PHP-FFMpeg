@@ -48,6 +48,64 @@ class Video extends Audio
         return $this;
     }
 
+    public function saveWitCustomConfiguration(FormatInterface $format, $outputPathFile)
+    {
+        $commands = array('-y', '-i', $this->pathfile);
+
+        $filters = clone $this->filters;
+        $commands = $this->driver->getConfiguration()->get('ffmpeg.commands');
+        $fs = FsManager::create();
+        $fsId = uniqid('ffmpeg-passes');
+        $passPrefix = $fs->createTemporaryDirectory(0777, 50, $fsId) . '/' . uniqid('pass-');
+        $passes = array();
+        $totalPasses = $format->getPasses();
+
+        if (1 > $totalPasses) {
+            throw new InvalidArgumentException('Pass number should be a positive value.');
+        }
+
+        for ($i = 1; $i <= $totalPasses; $i++) {
+            $pass = $commands;
+
+            if ($totalPasses > 1) {
+                $pass[] = '-pass';
+                $pass[] = $i;
+                $pass[] = '-passlogfile';
+                $pass[] = $passPrefix;
+            }
+
+            $pass[] = $outputPathFile;
+
+            $passes[] = $pass;
+        }
+
+        $failure = null;
+
+        foreach ($passes as $pass => $passCommands) {
+            try {
+                /** add listeners here */
+                $listeners = null;
+
+                if ($format instanceof ProgressableInterface) {
+                    $listeners = $format->createProgressListener($this, $this->ffprobe, $pass + 1, $totalPasses);
+                }
+
+                $this->driver->command($passCommands, false, $listeners);
+            } catch (ExecutionFailureException $e) {
+                $failure = $e;
+                break;
+            }
+        }
+
+        $fs->clean($fsId);
+
+        if (null !== $failure) {
+            throw new RuntimeException('Encoding failed', $failure->getCode(), $failure);
+        }
+
+        return $this;
+    }
+
     /**
      * Exports the video in the desired format, applies registered filters.
      *
