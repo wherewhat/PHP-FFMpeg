@@ -14,7 +14,7 @@ namespace FFMpeg;
 use Doctrine\Common\Cache\ArrayCache;
 use Illuminate\Support\ServiceProvider;
 
-class FFMpegServiceProvider implements ServiceProvider
+class FFMpegServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
