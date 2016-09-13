@@ -56,7 +56,7 @@ class Video extends Audio
         foreach ($filters as $filter) {
             $commands = array_merge($commands, $filter->apply($this, $format));
         }
-        $commands = $this->driver->getConfiguration()->get('ffmpeg.commands');
+        $commands = array_merge($commands, $this->driver->getConfiguration()->get('ffmpeg.commands'));
         $fs = FsManager::create();
         $fsId = uniqid('ffmpeg-passes');
         $passPrefix = $fs->createTemporaryDirectory(0777, 50, $fsId) . '/' . uniqid('pass-');

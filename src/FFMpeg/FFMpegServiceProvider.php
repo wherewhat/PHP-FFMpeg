@@ -12,10 +12,9 @@
 namespace FFMpeg;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Illuminate\Support\ServiceProvider;
 
-class FFMpegServiceProvider implements ServiceProviderInterface
+class FFMpegServiceProvider implements ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -32,23 +31,24 @@ class FFMpegServiceProvider implements ServiceProviderInterface
         ], 'config');
     }
 
-    public function register(Application $app)
+    public function register()
     {
+        $app = $this->app;
         $app['ffmpeg.configuration'] = array();
         $app['ffmpeg.default.configuration'] = array(
-            'ffmpeg.threads'   => 4,
-            'ffmpeg.timeout'   => 300,
-            'ffmpeg.binaries'  => array('avconv', 'ffmpeg'),
-            'ffprobe.timeout'  => 30,
-            'ffprobe.binaries' => array('avprobe', 'ffprobe'),
+          'ffmpeg.threads'   => 4,
+          'ffmpeg.timeout'   => 300,
+          'ffmpeg.binaries'  => array('avconv', 'ffmpeg'),
+          'ffprobe.timeout'  => 30,
+          'ffprobe.binaries' => array('avprobe', 'ffprobe'),
         );
         $app['ffmpeg.logger'] = null;
 
-        $app['ffmpeg.configuration.build'] = $app->share(function (Application $app) {
+        $app['ffmpeg.configuration.build'] = $app->share(function ($app) {
             return array_replace($app['ffmpeg.default.configuration'], $app['ffmpeg.configuration']);
         });
 
-        $app['ffmpeg'] = $app['ffmpeg.ffmpeg'] = $app->share(function (Application $app) {
+        $app['ffmpeg'] = $app['ffmpeg.ffmpeg'] = $app->share(function ($app) {
             $configuration = $app['ffmpeg.configuration.build'];
 
             if (isset($configuration['ffmpeg.timeout'])) {
