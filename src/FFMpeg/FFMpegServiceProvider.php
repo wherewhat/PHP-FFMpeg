@@ -12,6 +12,7 @@
 namespace FFMpeg;
 
 use Doctrine\Common\Cache\ArrayCache;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class FFMpegServiceProvider extends ServiceProvider
