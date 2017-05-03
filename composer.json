@@ -1,5 +1,5 @@
 {
-    "name": "soluciones-gbh/php-ffmpeg",
+    "name": "wherewhat/php-ffmpeg",
     "type": "library",
     "description": "FFMpeg PHP, an Object Oriented library to communicate with AVconv / ffmpeg",
     "keywords": ["video processing", "video", "audio processing", "audio", "avconv", "ffmpeg", "avprobe", "ffprobe"],
